@@ -1,0 +1,33 @@
+﻿@model WebApplication.Models.SubscriptionViewModel
+
+<link href="@Url.Content("~/Content/jquery-ui.min.css")" rel="stylesheet" type="text/css" />
+
+@{
+    ViewBag.Title = "Home Page";
+}
+
+<div class="jumbotron">
+   
+    @using (Html.BeginForm("SubscribeAsync", "Home", FormMethod.Post))
+    {
+        @Html.ValidationSummary()
+        @Html.AntiForgeryToken()
+
+        <p>
+            Subscribe for date: 
+            @Html.TextBoxFor(model => model.Date, "", new { @class = "date-picker" })
+            <input type="submit" class="btn btn-primary" value="Subscribe" />
+        </p>
+    }
+</div>
+
+@section scripts { 
+    <script src="@Url.Content("~/Scripts/jquery-ui.min.js")"></script>
+    <script type="text/javascript">
+        $(function () {
+            $('.date-picker').datepicker({
+                dateFormat: "yy-mm-dd"
+            });
+        })
+    </script>
+}

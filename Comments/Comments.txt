@@ -1,0 +1,59 @@
+Line 18
+	There should be a check if the "employees" file exists.
+	The call to File.ReadAllLines method should be wrapped with try/catch block.
+	The method ToArray() is not needed.
+	
+Line 20
+	Extract the generation of JsonEmployee to a separate 
+	or assign the call all_lines_in_file[i].Split('\t') to a variable at the beggining of the for cycle
+	for (int i = 0; i < all_lines_in_file.Length; i++)
+	{
+		JsonEmplyee e = GetEmployee(all_lines_in_file[i]);
+		employees.Add(e);
+	}
+	
+Line 24,25,26
+	The should be a check if an item exists at the specified index after the split.
+	
+Line 36
+	roles[generator.Next(4)] should become roles[generator.Next(roles.Length)] or roles[generator.Next(5)]
+	becouse the roles array has 5 items and generator.Next(4) will never return 4
+	
+Line 41
+	The same as above
+	
+Line 48
+	wrap the creation of jsonFile StreamWriter with try/catch and using blocks
+	
+	try
+	{
+		using (var jsonFile = File.CreateText("employees.json"))
+		{
+            ...   
+		}
+	}
+    catch(Exception ex)
+	{
+	}
+
+Line 53
+	Override ToString() method in JsonEmplyee class.
+	for (int i = 0; i < employees.Count; ++i)
+	{
+		var formattedEmployeed = employees[i].ToString();
+		if (i != employees.Count - 1)
+			formattedEmployeed += ",";
+		
+		jsonFile.WriteLine(formattedEmployeed);
+	}
+	
+	or use JsonConvert.SerializeObject
+	
+	for (int i = 0; i < employees.Count; ++i)
+	{
+		var formattedEmployeed = JsonConvert.SerializeObject(employees[i]);
+		if (i != employees.Count - 1)
+			formattedEmployeed += ",";
+		
+		jsonFile.WriteLine(formattedEmployeed);
+	}

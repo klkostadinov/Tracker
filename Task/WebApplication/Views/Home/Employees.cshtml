@@ -1,0 +1,81 @@
+﻿@model PagedList.IPagedList<WebApplication.EmployeesArrival>
+@using PagedList.Mvc;
+
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+<link href="@Url.Content("~/Content/jquery-ui.min.css")" rel="stylesheet" type="text/css" />
+
+
+@{
+    ViewBag.Title = "Employees";
+}
+
+<div class="jumbotron">
+
+    @using (Html.BeginForm("Employees", "Home", FormMethod.Get))
+    {
+        @Html.ValidationSummary()
+        @Html.AntiForgeryToken()
+
+        <p>
+            Find by id: @Html.TextBox("SearchID", ViewBag.SearchID as string)
+
+        </p>
+        <p>
+            Subscribe for date:
+            @Html.TextBox("SubscriptionDate", ViewBag.SubscriptionDate as DateTime?, new { @class = "date-picker" })
+            <input type="submit" class="btn btn-primary" value="Search" />
+        </p>
+    }
+</div>
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.ActionLink("ID", "Employees", new { sortOrder = ViewBag.CurrentSort, id = ViewBag.SearchID, subscriptionDate = ViewBag.SubscriptionDate })
+        </th>
+        <th>
+            @Html.ActionLink("Arrival", "Employees", new { sortOrder = ViewBag.CurrentSort, id = ViewBag.SearchID, subscriptionDate = ViewBag.SubscriptionDate })
+        </th>
+        <th>Name</th>
+        <th>Role</th>
+        <th>ManagerId</th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.EmployeeId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ArrivalTime)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EmployeeInfo.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EmployeeInfo.Role)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EmployeeInfo.ManagerId)
+            </td>
+        </tr>
+    }
+
+</table>
+<br />
+Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+
+@Html.PagedListPager(Model, page => Url.Action("Employees",
+    new { page, sortOrder = ViewBag.CurrentSort, id = ViewBag.SearchID, subscriptionDate = ViewBag.SubscriptionDate }))
+
+@section scripts {
+    <script src="@Url.Content("~/Scripts/jquery-ui.min.js")"></script>
+    <script type="text/javascript">
+        $(function () {
+            $('.date-picker').datepicker({
+                dateFormat: "yy-mm-dd",
+            });
+        })
+    </script>
+}
